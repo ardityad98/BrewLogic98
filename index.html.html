@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrewLogic Studio - Custom Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- HEADER -->
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-900/30">
+                    <svg class="w-5 h-5 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base tracking-tight text-amber-500 leading-tight">BrewLogic Studio</h1>
+                    <p class="text-xs text-slate-400">Custom Gear & Beans AI Calibration</p>
+                </div>
+            </div>
+            <button onclick="openApiKeyModal()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium border border-slate-700 transition-colors">
+                <span id="apiKeyStatusDot" class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span>Gemini API Key</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow space-y-6">
+
+        <!-- CONFIGURATION CARD -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                Parameter Alat & Karakter Biji Kopi
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Grinder -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Pilih Grinder</label>
+                    <select id="grinderSelect" onchange="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="timemore_c2_s2c">Timemore C2 (S2C Burr + 30-Click ESP)</option>
+                        <option value="timemore_c2_std">Timemore C2 (Standar)</option>
+                        <option value="timemore_c5">Timemore C5 (New Gen)</option>
+                    </select>
+                </div>
+
+                <!-- Dripper -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Pilih Dripper</label>
+                    <select id="dripperSelect" onchange="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="switch">Hario Switch (Hybrid / Immersion)</option>
+                        <option value="origami_s">Origami S (Conical)</option>
+                        <option value="origami_pinn">Origami Pinn</option>
+                        <option value="kalita">Kalita 101 (Flat / Wave)</option>
+                        <option value="sd1">SD1 (Suprima Instruments)</option>
+                        <option value="tricolate">Tricolate V3 (Zero-Bypass)</option>
+                        <option value="ceado_hoop">Ceado Hoop (Zero-Agitation Ring)</option>
+                    </select>
+                </div>
+
+                <!-- Brew Style -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Teknik / Gaya Seduh</label>
+                    <select id="styleSelect" onchange="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="standard">Standard Multi-Pour (3 Tetes)</option>
+                        <option value="low_agitation">Low Agitation / Center Pour</option>
+                        <option value="high_agitation">High Agitation / Multi-Pulse</option>
+                        <option value="immersion">Full Immersion (Switch / Steep)</option>
+                    </select>
+                </div>
+
+                <!-- Bean Origin -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Origin / Asal Biji Kopi</label>
+                    <input type="text" id="originInput" value="Ethiopia Yirgacheffe" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500" placeholder="Misal: Gayo Winey, Kerinci">
+                </div>
+
+                <!-- Bean Process -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Proses Pascapanen</label>
+                    <select id="processSelect" onchange="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="washed">Washed / Clean</option>
+                        <option value="honey">Honey Process</option>
+                        <option value="natural">Natural Process</option>
+                        <option value="anaerobic">Anaerobic / Experimental</option>
+                    </select>
+                </div>
+
+                <!-- Altitude -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Altitude (Ketinggian mdpl)</label>
+                    <input type="number" id="altitudeInput" value="1600" step="50" oninput="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <!-- Roast Color -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Warna Beans (Roast Color)</label>
+                    <select id="roastColorSelect" onchange="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="light">Light Roast (Cinnamon / Terang)</option>
+                        <option value="medium_light">Medium Light Roast</option>
+                        <option value="medium">Medium Roast (Cokelat Sedang)</option>
+                        <option value="dark">Dark Roast (Gelap)</option>
+                    </select>
+                </div>
+
+                <!-- Dose -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Dosis Kopi (Gram)</label>
+                    <input type="number" id="doseInput" value="15" min="10" max="25" step="0.5" oninput="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                </div>
+
+                <!-- Ratio -->
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-slate-300">Rasio (1 : X)</label>
+                    <input type="number" id="ratioInput" value="16" min="12" max="20" step="0.5" oninput="updateRecipe()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT CARD -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4">
+                <div>
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Rekomendasi Kalibrasi AI</h3>
+                    <div class="mt-3">
+                        <div id="grindResult" class="text-2xl font-extrabold text-amber-400 tracking-tight leading-tight">--</div>
+                        <div id="micronResult" class="text-xs text-slate-400 font-mono mt-1">Estimasi Partikel: -- micron ($\mu\text{m}$)</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Total Air</span>
+                        <span id="totalWater" class="text-lg font-bold text-slate-100">-- g</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Suhu Air</span>
+                        <span id="waterTemp" class="text-lg font-bold text-slate-100">-- °C</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-amber-400">Panduan Tahapan Seduh (Pouring Profile)</h3>
+                    <button onclick="askAiEngine()" class="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors flex items-center gap-1.5 shadow-md shadow-amber-500/20">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Kalkulasi dengan AI Engine
+                    </button>
+                </div>
+
+                <div id="recipeStepsList" class="space-y-2 font-mono text-xs overflow-y-auto max-h-40 pr-1"></div>
+
+                <div id="aiResponseBox" class="hidden bg-slate-950/90 border border-amber-500/40 rounded-xl p-3 text-xs text-slate-300 space-y-1">
+                    <div class="text-amber-400 font-bold border-b border-slate-800 pb-1 flex justify-between">
+                        <span>Analisis Master AI (Gemini 2.5 Flash)</span>
+                        <button onclick="document.getElementById('aiResponseBox').classList.add('hidden')" class="text-slate-500">✕</button>
+                    </div>
+                    <div id="aiResponseText" class="text-slate-200 leading-relaxed pt-1">Menghubungkan ke Gemini API...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMER -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col items-center text-center space-y-4">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 w-full text-left">Real-Time Brew Stopwatch</h3>
+            <div id="timerDisplay" class="text-5xl font-mono font-extrabold text-amber-400 tracking-widest">00:00</div>
+            <div class="flex items-center justify-center space-x-3 w-full max-w-xs">
+                <button onclick="startTimer()" id="startBtn" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Mulai</button>
+                <button onclick="resetTimer()" class="px-4 bg-slate-800 hover:bg-slate-700 text-rose-400 font-semibold py-2.5 rounded-xl text-xs border border-slate-700">Reset</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- API KEY MODAL -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="text-base font-bold text-amber-400">Konfigurasi Gemini API Key</h3>
+            <p class="text-xs text-slate-400">Masukkan kunci API dari Google AI Studio.</p>
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-200 font-mono">
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs text-slate-300">Batal</button>
+                <button onclick="saveApiKey()" class="px-4 py-2 rounded-xl bg-amber-500 text-xs text-slate-950 font-bold">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script type="module">
+        import { GoogleGenAI } from "https://esm.run/@genai/sdk";
+
+        const GRINDERS = {
+            timemore_c2_s2c: { name: "Timemore C2 (S2C + 30-Click ESP)", calc: m => Math.round(m / 22), fmt: c => `${c} klik (ESP)` },
+            timemore_c2_std: { name: "Timemore C2 (Standar)", calc: m => Math.round(m / 30), fmt: c => `${c} klik` },
+            timemore_c5: { name: "Timemore C5 (New Gen)", calc: m => Math.round(m / 25), fmt: c => `${c} klik` }
+        };
+
+        window.updateRecipe = function() {
+            const grinderKey = document.getElementById('grinderSelect').value;
+            const dripper = document.getElementById('dripperSelect').value;
+            const altitude = parseFloat(document.getElementById('altitudeInput').value) || 1500;
+            const roast = document.getElementById('roastColorSelect').value;
+            const process = document.getElementById('processSelect').value;
+            const dose = parseFloat(document.getElementById('doseInput').value) || 15;
+            const ratio = parseFloat(document.getElementById('ratioInput').value) || 16;
+
+            let base = 650;
+            if (dripper === 'switch') base = 720;
+            else if (dripper === 'tricolate') base = 550;
+            else if (dripper === 'ceado_hoop') base = 680;
+            else if (dripper === 'sd1') base = 640;
+
+            if (altitude > 1600) base -= 30; // Kopi dataran tinggi lebih padat
+            if (roast === 'light') base -= 25;
+            else if (roast === 'dark') base += 40;
+            if (process === 'natural' || process === 'anaerobic') base += 35;
+
+            const grinder = GRINDERS[grinderKey];
+            const clicks = grinder.calc(base);
+            const totalWater = Math.round(dose * ratio);
+            let waterTemp = roast === 'light' ? 93 : (roast === 'dark' ? 86 : 90);
+
+            document.getElementById('grindResult').textContent = grinder.fmt(clicks);
+            document.getElementById('micronResult').innerHTML = `Estimasi Partikel: <strong>${base} micron</strong>`;
+            document.getElementById('totalWater').textContent = `${totalWater} g`;
+            document.getElementById('waterTemp').textContent = `${waterTemp} °C`;
+
+            const steps = [
+                {t: "00:00 - 00:30", w: Math.round(dose * 2.5), d: "Bloom / Penuangan Awal. Swirl perlahan."},
+                {t: "00:30 - 01:15", w: Math.round(totalWater * 0.6), d: "Penuangan Utama putaran spiral stabil."},
+                {t: "01:15 - 02:10", w: totalWater, d: "Penuangan Akhir & biarkan turun tuntas."}
+            ];
+
+            const list = document.getElementById('recipeStepsList');
+            list.innerHTML = '';
+            steps.forEach(s => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between bg-slate-950/60 border border-slate-800 p-2.5 rounded-xl";
+                div.innerHTML = `<span class="text-amber-400 font-bold">${s.t}</span> <span class="text-slate-300 text-right">${s.d}</span>`;
+                list.appendChild(div);
+            });
+        };
+
+        window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
+        window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
+        window.saveApiKey = () => {
+            localStorage.setItem('gemini_api_key', document.getElementById('apiKeyInput').value.trim());
+            document.getElementById('apiKeyStatusDot').className = "w-2 h-2 rounded-full bg-emerald-500";
+            closeApiKeyModal();
+        };
+
+        window.askAiEngine = async function() {
+            const key = localStorage.getItem('gemini_api_key');
+            const box = document.getElementById('aiResponseBox');
+            const txt = document.getElementById('aiResponseText');
+            box.classList.remove('hidden');
+            if(!key) { txt.textContent = "⚠️ Masukkan API Key terlebih dahulu di tombol kanan atas."; return; }
+            txt.textContent = "Meminta analisis AI...";
+            try {
+                const ai = new GoogleGenAI({ apiKey: key });
+                const res = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: `Bertindaklah sebagai Master Barista. Analisis seduhan kopi: Origin ${document.getElementById('originInput').value}, proses ${document.getElementById('processSelect').value}, altitude ${document.getElementById('altitudeInput').value} mdpl, roast color ${document.getElementById('roastColorSelect').value}, menggunakan ${document.getElementById('dripperSelect').value} dan grinder ${document.getElementById('grinderSelect').value}. Berikan rekomendasi suhu dan penyesuaian gilingan singkat.`
+                });
+                txt.textContent = res.text;
+            } catch(e) { txt.textContent = "Error: " + e.message; }
+        };
+
+        let timer = null, secs = 0;
+        window.startTimer = () => {
+            if(timer) return;
+            timer = setInterval(() => {
+                secs++;
+                document.getElementById('timerDisplay').textContent = `${String(Math.floor(secs/60)).padStart(2,'0')}:${String(secs%60).padStart(2,'0')}`;
+            }, 1000);
+        };
+        window.resetTimer = () => { clearInterval(timer); timer = null; secs = 0; document.getElementById('timerDisplay').textContent = "00:00"; };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('gemini_api_key')) document.getElementById('apiKeyStatusDot').className = "w-2 h-2 rounded-full bg-emerald-500";
+            updateRecipe();
+        });
+    </script>
+</body>
+</html>
